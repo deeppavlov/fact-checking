@@ -1,0 +1,34 @@
+{
+    "chainer": {
+      "in": ["sentences"],
+      "pipe": [
+        {
+          "config_path": "./genie.json",
+          "in": ["sentences"],
+          "out": ["triplets"]
+        },
+        {
+          "class_name": "models.fact_checking:FactCheckerKB",
+          "hdt_kb_path": "{DOWNLOADS_PATH}/dbpedia_2015_10_simple.hdt",
+          "entity_sql_path": "{DOWNLOADS_PATH}/factkg_freq_entities.db",
+          "long_rels_path": "{DOWNLOADS_PATH}/dbpedia_long_rels.jsonl",
+          "prefixes": ["http://dbpedia.org/resource/", "http://dbpedia.org/ontology/"],
+          "in": ["triplets", "sentences"],
+          "out": ["pred_labels", "correct_sents"]
+        }
+      ],
+      "out": ["triplets", "pred_labels", "correct_sents"]
+    },
+    "metadata": {
+      "variables": {
+        "ROOT_PATH": "~/.deeppavlov",
+        "DOWNLOADS_PATH": "{ROOT_PATH}/downloads/genie"
+      },
+      "download": [
+        {
+          "url": "http://files.deeppavlov.ai/tmp/raushan/genie/fact_checking_files.tar.gz",
+          "subdir": "{DOWNLOADS_PATH}"
+        }
+      ]
+    }
+  }

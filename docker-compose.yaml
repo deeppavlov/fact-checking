@@ -1,0 +1,17 @@
+services:
+  fact-checking:
+    container_name: fact-checking
+    build:
+      args:
+        PORT: 8008
+        SRC_DIR: fact_checking
+      context: .
+      dockerfile: fact_checking/Dockerfile
+    volumes:
+      - /archive/turganbay/.deeppavlov:/root/.deeppavlov
+    ports:
+      - 8008:8008
+    environment:
+      - CUDA_VISIBLE_DEVICES=1
+
+version: '3.7'
