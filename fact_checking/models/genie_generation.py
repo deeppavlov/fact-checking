@@ -20,10 +20,6 @@ from .constrained_generation import get_information_extraction_prefix_allowed_to
 
 log = getLogger(__name__)
 
-import faulthandler
-
-faulthandler.enable()
-
 class GenieHF(BartForConditionalGeneration):
     @classmethod
     def from_pretrained(cls, model_name_or_path, return_dict=True, other_parameters=None):

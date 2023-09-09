@@ -12,9 +12,7 @@ app = Flask(__name__)
 
 PORT = int(os.getenv("PORT"))
 
-logger.info("STARTING...")
 try:
-    Trie(["a1", "b2"])
     model = build_model("fact_checker.json", download=False)
     model(["Barack Obama was born in Kazakhstan."])
     logger.info("The model is loaded.")
@@ -43,4 +41,4 @@ def respond():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=PORT)
+    app.run(debug=False, host="0.0.0.0", port=PORT)
