@@ -14,8 +14,8 @@ def get_information_extraction_prefix_allowed_tokens_fn_hf(
     end_of_triple_token="et",
     start_of_tag="<",
     end_of_tag=">",
-    relations_trie = None,
-    entities_trie = None,
+    relations_trie=None,
+    entities_trie=None,
     bos_as_first_token_generated=False,
 ):
     return _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
@@ -47,8 +47,8 @@ def get_information_extraction_prefix_allowed_tokens_fn_fairseq(
     end_of_triple_token="et",
     start_of_tag="<",
     end_of_tag=">",
-    relations_trie = None,
-    entities_trie = None,
+    relations_trie=None,
+    entities_trie=None,
     bos_as_first_token_generated=False,
 ):
     return _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
@@ -85,14 +85,12 @@ def _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
     end_of_triple_token="et",
     start_of_tag="<",
     end_of_tag=">",
-    relations_trie = None,
-    entities_trie = None,
+    relations_trie=None,
+    entities_trie=None,
     bos_as_first_token_generated=False,
 ):
     full_codes = {
-        n: encode_fn(
-            " {}{}{}".format(start_of_tag, c, end_of_tag)
-        )
+        n: encode_fn(" {}{}{}".format(start_of_tag, c, end_of_tag))
         for n, c in zip(
             (
                 "subject_token",
@@ -107,7 +105,7 @@ def _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
                 end_of_triple_token,
             ),
         )
-    }  
+    }
 
     l = []
     s = []
@@ -131,19 +129,28 @@ def _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
     codes["BOS"] = bos_token_id
 
     status_codes = ["ob", "s", "r", "o"]
-    status_next_token_name = ["subject_token", "relation_token", "object_token", "end_of_entity_token"]
+    status_next_token_name = [
+        "subject_token",
+        "relation_token",
+        "object_token",
+        "end_of_entity_token",
+    ]
 
     if sentences is not None:
         sent_origs = [[codes["EOS"]] + encode_fn(sent)[1:] for sent in sentences]
     else:
         sent_origs = []
-    
+
     if entities_trie is None:
         entities_trie = DummyTrie(
             [
                 i
-                for i in range(vocabulary_length-1)
-                if i not in (bos_token_id, pad_token_id,)
+                for i in range(vocabulary_length - 1)
+                if i
+                not in (
+                    bos_token_id,
+                    pad_token_id,
+                )
             ]
         )
 
@@ -151,19 +158,26 @@ def _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
         relations_trie = DummyTrie(
             [
                 i
-                for i in range(vocabulary_length-1)
-                if i not in (bos_token_id, pad_token_id,)
+                for i in range(vocabulary_length - 1)
+                if i
+                not in (
+                    bos_token_id,
+                    pad_token_id,
+                )
             ]
         )
-    
+
     dummy_trie = DummyTrie(
         [
             i
-            for i in range(vocabulary_length-1)
-            if i not in (bos_token_id, pad_token_id,)
+            for i in range(vocabulary_length - 1)
+            if i
+            not in (
+                bos_token_id,
+                pad_token_id,
+            )
         ]
     )
-
 
     def get_status(sent):
 
@@ -171,7 +185,11 @@ def _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
 
         i = 0
         while i < len(sent) - 2:
-            if sent[i] == codes["start_of_tag"] and sent[i + 1] in tag_codes and sent[i + 2] == codes["end_of_tag"]:
+            if (
+                sent[i] == codes["start_of_tag"]
+                and sent[i + 1] in tag_codes
+                and sent[i + 2] == codes["end_of_tag"]
+            ):
                 status += 1
 
             i += 1
@@ -185,7 +203,11 @@ def _get_information_extraction_prefix_allowed_tokens_fn_fairseq(
         i = len(sent) - 2
 
         while i >= 0:
-            if sent[i] == codes["start_of_tag"] and sent[i + 1] in tag_codes and sent[i + 2] == codes["end_of_tag"]:
+            if (
+                sent[i] == codes["start_of_tag"]
+                and sent[i + 1] in tag_codes
+                and sent[i + 2] == codes["end_of_tag"]
+            ):
                 return i, i + 2
 
             i -= 1

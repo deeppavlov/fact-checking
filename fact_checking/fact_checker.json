@@ -9,7 +9,7 @@
         },
         {
           "class_name": "models.fact_checking:FactCheckerKB",
-          "hdt_kb_path": "{DOWNLOADS_PATH}/dbpedia_2015_10_simple.hdt",
+          "hdt_kb_path": "{DOWNLOADS_PATH}/dbpedia_2015_10_simple_added.hdt",
           "entity_sql_path": "{DOWNLOADS_PATH}/factkg_freq_entities.db",
           "long_rels_path": "{DOWNLOADS_PATH}/dbpedia_long_rels.jsonl",
           "prefixes": ["http://dbpedia.org/resource/", "http://dbpedia.org/ontology/"],
@@ -28,6 +28,10 @@
         {
           "url": "http://files.deeppavlov.ai/tmp/raushan/genie/fact_checking_files.tar.gz",
           "subdir": "{DOWNLOADS_PATH}"
+        },
+        {
+          "url": "http://files.deeppavlov.ai/tmp/raushan/genie/factkg_dataset.tar.gz",
+          "subdir": "{DOWNLOADS_PATH}/dataset"
         }
       ]
     }

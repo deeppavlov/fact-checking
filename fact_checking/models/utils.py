@@ -8,6 +8,7 @@ from logging import getLogger
 
 log = getLogger(__name__)
 
+
 class Trie(object):
     def __init__(self, sequences):
         next_sets = defaultdict(list)
@@ -43,11 +44,19 @@ class DummyTrie(object):
 class TripletUtils(object):
     @staticmethod
     def convert_text_sequence_to_text_triples(text, verbose=False, return_set=True):
-        text_parts = [element.strip() for element in re.split(r"<sub>|<rel>|<obj>|<et>", text) if element.strip()]
+        text_parts = [
+            element.strip()
+            for element in re.split(r"<sub>|<rel>|<obj>|<et>", text)
+            if element.strip()
+        ]
         if verbose and len(text_parts) % 3 != 0:
-            log.warning(f"Textual sequence: ```{text}``` does not follow the <sub>, <rel>, <obj>, <et> format!")
+            log.warning(
+                f"Textual sequence: ```{text}``` does not follow the <sub>, <rel>, <obj>, <et> format!"
+            )
 
-        text_triples = [tuple(text_parts[i : i + 3]) for i in range(0, len(text_parts) - 2, 3)]
+        text_triples = [
+            tuple(text_parts[i : i + 3]) for i in range(0, len(text_parts) - 2, 3)
+        ]
 
         if not return_set:
             return text_triples
@@ -67,7 +76,13 @@ class TripletUtils(object):
             sub, rel, obj = t
 
             formatted_triple = "{} {}{} {}{} {}{}".format(
-                " <sub>", sub.strip(), " <rel>", rel.strip(), " <obj>", obj.strip(), " <et>"
+                " <sub>",
+                sub.strip(),
+                " <rel>",
+                rel.strip(),
+                " <obj>",
+                obj.strip(),
+                " <et>",
             )
             output_triples.append(formatted_triple)
 

@@ -9,13 +9,15 @@ Clausie as a spacy library
 """
 
 import spacy
-#import lemminflect
+
+# import lemminflect
 import logging
 import typing
 
 from spacy.tokens import Span, Doc
 from spacy.matcher import Matcher
-#from lemminflect import getInflection
+
+# from lemminflect import getInflection
 
 logging.basicConfig(level=logging.INFO)
 
@@ -197,13 +199,20 @@ class Clause:
         )
 
     def to_propositions(
-        self, as_text: bool = False, inflect: str or None = "VBD", capitalize: bool = False
+        self,
+        as_text: bool = False,
+        inflect: str or None = "VBD",
+        capitalize: bool = False,
     ):
 
         if inflect and not as_text:
-            logging.warning("`inflect' argument is ignored when `as_text==False'. To suppress this warning call `to_propositions' with the argument `inflect=None'")
+            logging.warning(
+                "`inflect' argument is ignored when `as_text==False'. To suppress this warning call `to_propositions' with the argument `inflect=None'"
+            )
         if capitalize and not as_text:
-            logging.warning("`capitalize' argument is ignored when `as_text==False'. To suppress this warning call `to_propositions' with the argument `capitalize=False")
+            logging.warning(
+                "`capitalize' argument is ignored when `as_text==False'. To suppress this warning call `to_propositions' with the argument `capitalize=False"
+            )
 
         propositions = []
 
@@ -305,14 +314,20 @@ def _get_verb_matches(span):
     # (see mdmjsh answer here: https://stackoverflow.com/questions/47856247/extract-verb-phrases-using-spacy)
 
     verb_matcher = Matcher(span.vocab)
-    verb_matcher.add("Negative_verb", [[{"POS": "AUX"}, {"POS": "PART"}, {"POS": "VERB"}]])
-    #verb_matcher.add("Negative_verb", [[{"POS": "VERB"}, {"POS": "PART"}]])
+    verb_matcher.add(
+        "Negative_verb", [[{"POS": "AUX"}, {"POS": "PART"}, {"POS": "VERB"}]]
+    )
+    # verb_matcher.add("Negative_verb", [[{"POS": "VERB"}, {"POS": "PART"}]])
     verb_matcher.add("Negative_verb", [[{"POS": "AUX"}, {"POS": "PART"}]])
-    
-    verb_matcher.add("Auxiliary verb phrase aux-verb", [
-        [{"POS": "AUX"}, {"POS": "VERB"}]])
+
+    verb_matcher.add(
+        "Auxiliary verb phrase aux-verb", [[{"POS": "AUX"}, {"POS": "VERB"}]]
+    )
     verb_matcher.add("Auxiliary verb phrase", [[{"POS": "AUX"}]])
-    verb_matcher.add("Verb phrase", [[{"POS": "VERB"}]],)
+    verb_matcher.add(
+        "Verb phrase",
+        [[{"POS": "VERB"}]],
+    )
 
     return verb_matcher(span)
 
@@ -327,8 +342,8 @@ def _get_verb_chunks(span):
             verb_chunks.append(match)
         else:
             prev_vp = [vp for vp in verb_chunks if vp.root == match.root][0]
-            longest_vp = max([prev_vp, match], key = lambda x: len(x))
-            shortest_vp = min([prev_vp, match], key = lambda x: len(x))
+            longest_vp = max([prev_vp, match], key=lambda x: len(x))
+            shortest_vp = min([prev_vp, match], key=lambda x: len(x))
             if longest_vp not in verb_chunks:
                 verb_chunks.append(longest_vp)
             if shortest_vp in verb_chunks:
@@ -346,8 +361,7 @@ def _get_subject(verb):
                 return subject
 
         # ... otherwise recurse up one level
-        if (root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"]
-            and root != root.head):
+        if root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"] and root != root.head:
             root = root.head
         else:
             root = None
@@ -403,7 +417,8 @@ def extract_clauses(span):
         clauses.append(clause)
     return clauses
 
-@spacy.Language.component('claucy')
+
+@spacy.Language.component("claucy")
 def extract_clauses_doc(doc):
     for sent in doc.sents:
         clauses = extract_clauses(sent)
@@ -413,7 +428,7 @@ def extract_clauses_doc(doc):
 
 
 def add_to_pipe(nlp):
-    nlp.add_pipe('claucy')
+    nlp.add_pipe("claucy")
 
 
 def extract_span_from_entity(token):
